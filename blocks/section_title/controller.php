@@ -84,7 +84,7 @@
 		}
 		
 		
-		function save($data){
+		public function save($data){
 			
 			if(empty($data['ctHandles'])){
 				$data['ctHandles'] = NULL;	
@@ -95,7 +95,26 @@
 			parent::save($data);
 		}
 		
-		function pre($thing, $save=FALSE){
+		public function view(){
+			$sectionCollection = $this->getSectionCollection();
+			if($sectionCollection){
+				$title = $sectionCollection->getCollectionName();
+				if(empty($title)){
+					$title = t('Section Title Placeholder');	
+				}
+				$this->set('title', $title);
+				
+				if($sectionCollection){
+					$nh = Loader::helper('navigation');
+					$this->set('url', $nh->getCollectionURL($sectionCollection));
+				}else{
+					$this->set('url', NULL);	
+				}
+				$this->set('sectionCollection', $sectionCollection);	
+			}
+		}
+		
+		public function pre($thing, $save=FALSE){
 			$str = '<pre style="white-space:pre; border:1px solid #ccc; padding:8px; margin:0 0 8px 0;">'.print_r($thing, TRUE).'</pre>';
 			if(!$save){
 				echo $str;	
